@@ -32,7 +32,6 @@
       "Tsetsee\\PayumQPay\\": "src/"
     }
   },
-  "target-dir": "Tsetsee/PayumQPay",
   "extra": {
     "branch-alias": {
       "dev-master": "1.6-dev"
