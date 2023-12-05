@@ -17,7 +17,10 @@
     "payum/core": "^1.5",
     "tsetsee/qpay-php-api": "^1.0",
     "php-http/message-factory": "^1.1",
-    "php-http/httplug": "^1.1"
+    "php-http/httplug": "^1.1",
+    "php-http/discovery": "^1.19",
+    "psr/http-factory-implementation": "*",
+    "http-interop/http-factory-guzzle": "^1.2"
   },
   "require-dev": {
     "payum/core": "^1.5",
@@ -26,7 +29,10 @@
     "symfony/var-dumper": "^7.0"
   },
   "config": {
-    "bin-dir": "bin"
+    "bin-dir": "bin",
+    "allow-plugins": {
+      "php-http/discovery": true
+    }
   },
   "autoload": {
     "psr-4": {
