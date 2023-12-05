@@ -17,6 +17,7 @@
     "payum/core": "^1.5",
     "tsetsee/qpay-php-api": "^1.0",
     "php-http/message-factory": "^1.1"
+    "php-http/httplug": "^1.1"
   },
   "require-dev": {
     "payum/core": "^1.5",
