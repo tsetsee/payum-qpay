@@ -2,10 +2,8 @@
 
 namespace Tsetsee\PayumQPay\Action\Api;
 
-use ArrayAccess;
 use GuzzleHttp\Exception\BadResponseException;
 use GuzzleHttp\Exception\RequestException;
-use LogicException;
 use Payum\Core\Bridge\Spl\ArrayObject;
 use Payum\Core\Exception\RequestNotSupportedException;
 use Payum\Core\Request\Convert;
@@ -15,9 +13,8 @@ use Tsetsee\PayumQPay\Request\CreateInvoice;
 final class CreateInvoiceAction extends BaseApiAwareAction
 {
     /**
-    * @inheritdoc
-    * @param CreateInvoice $request
-    */
+     * @param CreateInvoice $request
+     */
     public function execute($request): void
     {
         RequestNotSupportedException::assertSupports($this, $request);
@@ -28,12 +25,13 @@ final class CreateInvoiceAction extends BaseApiAwareAction
         $status = $details['status'];
 
         if ($status !== PaymentStatus::STATE_NEW->value) {
-            throw new LogicException('invalid status code: ' . (string) $status);
+            throw new \LogicException('invalid status code: '.(string) $status);
         }
 
         try {
-            if (empty($details['amount'])) {
+            if (!isset($details['amount'])) {
                 $details['status'] = PaymentStatus::STATE_CANCEL->value;
+                $request->setModel((array) $details);
 
                 return;
             }
@@ -41,26 +39,27 @@ final class CreateInvoiceAction extends BaseApiAwareAction
             $convert = new Convert($details, 'qpay');
             $this->gateway->execute($convert);
 
+            /** @phpstan-ignore-next-line */
             $invoice = $this->api->createInvoice($convert->getResult());
 
             $details['status'] = PaymentStatus::STATE_PROCESSING->value;
             $details['invoice'] = (array) $invoice->toArray();
+        } catch (BadResponseException $e) {
+            $details['status'] = PaymentStatus::STATE_CANCEL->value;
+            $details['error'] = $e->getMessage();
         } catch (RequestException $exception) {
             $response = $exception->getResponse();
             $details['status'] = $response?->getStatusCode();
-        } catch(BadResponseException $e) {
-            $details['status'] = PaymentStatus::STATE_CANCEL->value;
-            $details['error'] = $e->getMessage();
+            $details['error'] = (string) $response?->getBody();
         }
-
         $request->setModel((array) $details);
     }
 
     public function supports($request): bool
     {
         return
-            $request instanceof CreateInvoice &&
-            $request->getModel() instanceof ArrayAccess
+            $request instanceof CreateInvoice
+            && $request->getModel() instanceof \ArrayAccess
         ;
     }
 }

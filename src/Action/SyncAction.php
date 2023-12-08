@@ -15,9 +15,6 @@ final class SyncAction implements ActionInterface, GatewayAwareInterface
 {
     use GatewayAwareTrait;
 
-    /**
-     * @inheritdoc
-     */
     public function execute($request): void
     {
         RequestNotSupportedException::assertSupports($this, $request);
@@ -33,8 +30,8 @@ final class SyncAction implements ActionInterface, GatewayAwareInterface
     public function supports($request): bool
     {
         return
-            $request instanceof Sync &&
-            $request->getModel() instanceof \ArrayObject
+            $request instanceof Sync
+            && $request->getModel() instanceof \ArrayObject
         ;
     }
 }

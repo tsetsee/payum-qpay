@@ -7,7 +7,7 @@ use Payum\Core\ApiAwareInterface;
 use Payum\Core\ApiAwareTrait;
 use Payum\Core\GatewayAwareInterface;
 use Payum\Core\GatewayAwareTrait;
-use Tsetsee\Qpay\Api\QPayApi;
+use Tsetsee\PayumQPay\Api;
 
 abstract class BaseApiAwareAction implements ActionInterface, GatewayAwareInterface, ApiAwareInterface
 {
@@ -16,6 +16,6 @@ abstract class BaseApiAwareAction implements ActionInterface, GatewayAwareInterf
 
     public function __construct()
     {
-        $this->apiClass = QPayApi::class;
+        $this->apiClass = Api::class;
     }
 }

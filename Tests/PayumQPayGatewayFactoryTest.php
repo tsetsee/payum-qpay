@@ -2,7 +2,6 @@
 
 namespace Tests;
 
-use LogicException;
 use Payum\Core\Tests\AbstractGatewayFactoryTest;
 use Tsetsee\PayumQPay\PayumQPayGatewayFactory;
 
@@ -63,7 +62,7 @@ class PayumQPayGatewayFactoryTest extends AbstractGatewayFactoryTest
 
     public function testShouldThrowIfRequiredOptionsNotPassed(): void
     {
-        $this->expectException(LogicException::class);
+        $this->expectException(\LogicException::class);
         $this->expectExceptionMessage('The username, password fields are required.');
         $factory = new PayumQPayGatewayFactory();
 

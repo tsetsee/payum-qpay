@@ -11,20 +11,19 @@ class StatusActionTest extends AbstractActionTest
     protected $requestClass = GetHumanStatus::class;
     protected $actionClass = StatusAction::class;
 
-
     /**
      * @test
      */
-    public function should_not_support_anything_not_status_request()
+    public function shouldNotSupportAnythingNotStatusRequest()
     {
         $action = new StatusAction();
         $this->assertFalse($action->supports(new \stdClass()));
     }
 
     /**
-    * @test
-    */
-    public function should_mark_new_if_status_is_not_set()
+     * @test
+     */
+    public function shouldMarkNewIfStatusIsNotSet()
     {
         $action = new StatusAction();
         $request = new GetHumanStatus([]);
@@ -35,9 +34,9 @@ class StatusActionTest extends AbstractActionTest
     }
 
     /**
-    * @test
-    */
-    public function should_mark_new_if_status_is_processing()
+     * @test
+     */
+    public function shouldMarkNewIfStatusIsProcessing()
     {
         $action = new StatusAction();
         $request = new GetHumanStatus([
@@ -50,9 +49,9 @@ class StatusActionTest extends AbstractActionTest
     }
 
     /**
-    * @test
-    */
-    public function should_mark_captured_if_status_is_paid()
+     * @test
+     */
+    public function shouldMarkCapturedIfStatusIsPaid()
     {
         $action = new StatusAction();
         $request = new GetHumanStatus([
@@ -65,9 +64,9 @@ class StatusActionTest extends AbstractActionTest
     }
 
     /**
-    * @test
-    */
-    public function should_mark_failed_if_status_is_else()
+     * @test
+     */
+    public function shouldMarkFailedIfStatusIsElse()
     {
         $action = new StatusAction();
         $request = new GetHumanStatus([

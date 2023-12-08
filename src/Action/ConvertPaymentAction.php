@@ -15,11 +15,9 @@ class ConvertPaymentAction implements ActionInterface
     use GatewayAwareTrait;
 
     /**
-     * {@inheritDoc}
-     *
      * @param Convert $request
      */
-    public function execute($request)
+    public function execute($request): void
     {
         RequestNotSupportedException::assertSupports($this, $request);
 
@@ -34,18 +32,15 @@ class ConvertPaymentAction implements ActionInterface
         $model['email'] = $payment->getClientEmail();
         $model['status'] = PaymentStatus::STATE_NEW->value;
 
-        $request->setResult((array)$model);
+        $request->setResult((array) $model);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public function supports($request)
     {
         return
-            $request instanceof Convert &&
-            $request->getSource() instanceof PaymentInterface &&
-            $request->getTo() == 'array'
+            $request instanceof Convert
+            && $request->getSource() instanceof PaymentInterface
+            && 'array' == $request->getTo()
         ;
     }
 }

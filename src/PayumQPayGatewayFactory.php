@@ -13,14 +13,11 @@ use Tsetsee\PayumQPay\Action\NotifyAction;
 use Tsetsee\PayumQPay\Action\StatusAction;
 use Tsetsee\PayumQPay\Action\SyncAction;
 use Tsetsee\Qpay\Api\Enum\Env;
-use Tsetsee\Qpay\Api\QPayApi;
+use Webmozart\Assert\Assert;
 
 class PayumQPayGatewayFactory extends GatewayFactory
 {
-    /**
-     * {@inheritDoc}
-     */
-    protected function populateConfig(ArrayObject $config)
+    protected function populateConfig(ArrayObject $config): void
     {
         $config->defaults([
             'payum.factory_name' => 'qpay',
@@ -36,24 +33,36 @@ class PayumQPayGatewayFactory extends GatewayFactory
         ]);
 
         if (false == $config['payum.api']) {
-            $config['payum.default_options'] = array(
+            $config['payum.default_options'] = [
                 'sandbox' => true,
                 'username' => '',
                 'password' => '',
                 'options' => [],
-            );
+            ];
+            /* @phpstan-ignore-next-line */
             $config->defaults($config['payum.default_options']);
             $config['payum.required_options'] = [];
 
             $config['payum.api'] = function (ArrayObject $config) {
-                $config->validateNotEmpty(['username', 'password']);
+                $config->validateNotEmpty(['username', 'password', 'invoiceCode']);
 
-                return new QPayApi(
+                Assert::string($config['username']);
+                Assert::string($config['password']);
+                Assert::boolean($config['sandbox']);
+                Assert::string($config['invoiceCode']);
+
+                $api = new Api(
                     $config['username'],
                     $config['password'],
                     $config['sandbox'] ? Env::SANDBOX : Env::PROD,
-                    $config['options']
+                    $config['invoiceCode']
                 );
+
+                /** @var ?array<string, mixed> $options */
+                $options = $config['options'];
+                $api->setup($options ?? []);
+
+                return $api;
             };
         }
     }

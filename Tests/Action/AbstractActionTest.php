@@ -4,12 +4,12 @@ namespace Tests\Action;
 
 use Payum\Core\GatewayInterface;
 use Payum\Core\Security\TokenInterface;
-use Tsetsee\PayumQPay\Api;
-use PHPUnit\Framework\MockObject\MockObject;
 use Payum\Core\Tests\GenericActionTest;
+use PHPUnit\Framework\MockObject\MockObject;
+use Tsetsee\PayumQPay\Api;
 
 /**
- * Class AbstractActionTest
+ * Class AbstractActionTest.
  */
 abstract class AbstractActionTest extends GenericActionTest
 {

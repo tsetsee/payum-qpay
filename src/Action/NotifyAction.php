@@ -15,30 +15,25 @@ class NotifyAction implements ActionInterface
     use GatewayAwareTrait;
 
     /**
-     * {@inheritDoc}
-     *
      * @param Notify $request
      */
-    public function execute($request)
+    public function execute($request): void
     {
         RequestNotSupportedException::assertSupports($this, $request);
 
         $model = ArrayObject::ensureArrayObject($request->getModel());
 
-        /** @var Notify $request */
+        /* @var Notify $request */
         $this->gateway->execute(new Sync($model));
 
         throw new HttpResponse('SUCCESS', 200);
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public function supports($request)
+    public function supports($request): bool
     {
         return
-            $request instanceof Notify &&
-            $request->getModel() instanceof \ArrayAccess
+            $request instanceof Notify
+            && $request->getModel() instanceof \ArrayAccess
         ;
     }
 }

@@ -26,8 +26,8 @@ class Api
 
     /**
      * @param array<string, mixed> $options - [
-     *      ?Psr\Log\LoggerInterface $logger
-     * ]
+     *                                      ?Psr\Log\LoggerInterface $logger
+     *                                      ]
      */
     public function setup(array $options): void
     {
@@ -59,7 +59,7 @@ class Api
     public function checkPayment(
         ObjectType $objectType,
         string $objectId,
-        ?Offset $offset = null,
+        Offset $offset = null,
     ): CheckPaymentResponse {
         return $this->client->checkPayment(CheckPaymentRequest::from([
             'objectType' => $objectType->value,

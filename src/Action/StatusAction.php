@@ -3,25 +3,23 @@
 namespace Tsetsee\PayumQPay\Action;
 
 use Payum\Core\Action\ActionInterface;
-use Payum\Core\Request\GetStatusInterface;
 use Payum\Core\Bridge\Spl\ArrayObject;
 use Payum\Core\Exception\RequestNotSupportedException;
+use Payum\Core\Request\GetStatusInterface;
 use Tsetsee\PayumQPay\Enum\PaymentStatus;
 
 class StatusAction implements ActionInterface
 {
     /**
-     * {@inheritDoc}
-     *
      * @param GetStatusInterface $request
      */
-    public function execute($request)
+    public function execute($request): void
     {
         RequestNotSupportedException::assertSupports($this, $request);
 
         $model = ArrayObject::ensureArrayObject($request->getModel());
 
-        switch($model['status']) {
+        switch ($model['status']) {
             case PaymentStatus::STATE_NEW->value:
             case PaymentStatus::STATE_PROCESSING->value:
                 $request->markNew();
@@ -34,14 +32,11 @@ class StatusAction implements ActionInterface
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public function supports($request)
+    public function supports($request): bool
     {
         return
-            $request instanceof GetStatusInterface &&
-            $request->getModel() instanceof \ArrayAccess
+            $request instanceof GetStatusInterface
+            && $request->getModel() instanceof \ArrayAccess
         ;
     }
 }
