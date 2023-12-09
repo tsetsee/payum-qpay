@@ -2,19 +2,13 @@
 
 namespace Tsetsee\PayumQPay\Action\Api;
 
-use ArrayAccess;
-use LogicException;
 use Payum\Core\Bridge\Spl\ArrayObject;
 use Payum\Core\Exception\RequestNotSupportedException;
-use Tsetsee\PayumQPay\Action\Api\BaseApiAwareAction;
 use Tsetsee\PayumQPay\Enum\PaymentStatus;
 use Tsetsee\PayumQPay\Request\CheckPayment;
 
 final class CheckPaymentAction extends BaseApiAwareAction
 {
-    /**
-    * @inheritdoc
-    */
     public function execute($request): void
     {
         RequestNotSupportedException::assertSupports($this, $request);
@@ -23,7 +17,7 @@ final class CheckPaymentAction extends BaseApiAwareAction
         $details = ArrayObject::ensureArrayObject($request->getModel());
 
         if (!isset($details['invoice'])) {
-            throw new LogicException('bad invoice array');
+            throw new \LogicException('bad invoice array');
         }
 
         /** @var array<string, mixed> $invoice */
@@ -32,30 +26,28 @@ final class CheckPaymentAction extends BaseApiAwareAction
         /** @var ?string $invoiceId */
         $invoiceId = $invoice['invoice_id'] ?? null;
 
-        if ($invoiceId === null) {
-            throw new LogicException('invoice_id field not found in invoice array');
+        if (null === $invoiceId) {
+            throw new \LogicException('invoice_id field not found in invoice array');
         }
 
+        /** @phpstan-ignore-next-line */
         $qpayInvoice = $this->api->getInvoice($invoiceId);
 
-        /** @psalm-suppress MixedAssignment */
+        /* @psalm-suppress MixedAssignment */
         $details['invoice_details'] = $qpayInvoice->toArray();
 
-        if ($qpayInvoice->invoiceStatus === 'CLOSED') {
+        if ('CLOSED' === $qpayInvoice->invoiceStatus) {
             $details['status'] = PaymentStatus::STATE_PAID->value;
         }
 
         $request->setModel($details);
     }
 
-    /**
-     * @inheritDoc
-     */
     public function supports($request)
     {
         return
-            $request instanceof CheckPayment &&
-            $request->getModel() instanceof ArrayAccess
+            $request instanceof CheckPayment
+            && $request->getModel() instanceof \ArrayAccess
         ;
     }
 }

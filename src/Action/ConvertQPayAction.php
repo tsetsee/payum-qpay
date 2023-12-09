@@ -2,34 +2,33 @@
 
 namespace Tsetsee\PayumQPay\Action;
 
-use ArrayAccess;
 use Payum\Core\Action\ActionInterface;
 use Payum\Core\Bridge\Spl\ArrayObject;
 use Payum\Core\Exception\RequestNotSupportedException;
 use Payum\Core\GatewayAwareTrait;
 use Payum\Core\Request\Convert;
-use Tsetsee\Qpay\Api\DTO\CreateInvoiceRequest;
 
 class ConvertQPayAction implements ActionInterface
 {
     use GatewayAwareTrait;
 
     /**
-     * {@inheritDoc}
-     *
      * @param Convert $request
      */
-    public function execute($request)
+    public function execute($request): void
     {
         RequestNotSupportedException::assertSupports($this, $request);
 
         $details = ArrayObject::ensureArrayObject($request->getSource());
-        $model = ArrayObject::ensureArrayObject($details['qpay']);
+        $model = ArrayObject::ensureArrayObject($details['qpay'] ?? []);
+
+        /** @var string $number */
+        $number = $details['number'];
 
         $model->defaults([
-            'senderInvoiceNo' => $details['number'],
+            'senderInvoiceNo' => $number,
             'invoiceReceiverCode' => $details['clientId'],
-            'invoiceDescription' => sprintf('invoice no: %s', $details['number']),
+            'invoiceDescription' => sprintf('invoice no: %s', $number),
             'senderBranchCode' => 'CENTRAL',
             'amount' => round(
                 $details['amount'] / 100.0,
@@ -42,15 +41,12 @@ class ConvertQPayAction implements ActionInterface
         $request->setResult((array) $model);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public function supports($request)
     {
         return
-            $request instanceof Convert &&
-            $request->getSource() instanceof ArrayAccess &&
-            $request->getTo() == 'qpay'
+            $request instanceof Convert
+            && $request->getSource() instanceof \ArrayAccess
+            && 'qpay' == $request->getTo()
         ;
     }
 }

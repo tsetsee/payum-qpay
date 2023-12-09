@@ -16,15 +16,26 @@
   "require": {
     "payum/core": "^1.5",
     "tsetsee/qpay-php-api": "^1.0",
-    "php-http/message-factory": "^1.1"
+    "php-http/message-factory": "^1.1",
+    "php-http/httplug": "^1.1",
+    "php-http/discovery": "^1.19",
+    "psr/http-factory-implementation": "*",
+    "http-interop/http-factory-guzzle": "^1.2",
+    "webmozart/assert": "^1.11"
   },
   "require-dev": {
     "php-http/guzzle6-adapter": "^1.0",
     "symfony/phpunit-bridge": "^7.0",
-    "symfony/var-dumper": "^7.0"
+    "symfony/var-dumper": "^6.4.0",
+    "symfony/property-info": "^6.0.0",
+    "friendsofphp/php-cs-fixer": "^3.40",
+    "phpstan/phpstan": "^1.10"
   },
   "config": {
-    "bin-dir": "bin"
+    "bin-dir": "bin",
+    "allow-plugins": {
+      "php-http/discovery": true
+    }
   },
   "autoload": {
     "psr-4": {
@@ -37,6 +48,12 @@
     }
   },
   "scripts": {
-    "test": "simple-phpunit"
+    "test": [
+      "@fixer",
+      "@phpstan",
+      "simple-phpunit"
+    ],
+    "phpstan": "phpstan analyze",
+    "fixer": "php-cs-fixer fix"
   }
 }
