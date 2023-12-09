@@ -23,7 +23,7 @@ class ConvertQPayAction implements ActionInterface
     {
         RequestNotSupportedException::assertSupports($this, $request);
 
-        $details = ArrayObject::ensureArrayObject($request->getSouce());
+        $details = ArrayObject::ensureArrayObject($request->getSource());
         $model = ArrayObject::ensureArrayObject($details['qpay']);
 
         $model->defaults([
