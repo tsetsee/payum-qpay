@@ -29,6 +29,9 @@ final class CreateInvoiceAction extends BaseApiAwareAction
         }
 
         try {
+            $this->gateway->execute($convert = new Convert($request->getFirstModel(), 'array'));
+            $details->replace((array) $convert->getResult());
+
             if (!isset($details['amount'])) {
                 $details['status'] = PaymentStatus::STATE_CANCEL->value;
                 $request->setModel((array) $details);

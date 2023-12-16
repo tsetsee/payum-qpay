@@ -4,6 +4,7 @@ namespace Tsetsee\PayumQPay;
 
 use Payum\Core\Bridge\Spl\ArrayObject;
 use Payum\Core\GatewayFactory;
+use Payum\Core\Storage\StorageInterface;
 use Tsetsee\PayumQPay\Action\Api\CheckPaymentAction;
 use Tsetsee\PayumQPay\Action\Api\CreateInvoiceAction;
 use Tsetsee\PayumQPay\Action\CaptureAction;
@@ -19,11 +20,13 @@ class PayumQPayGatewayFactory extends GatewayFactory
 {
     protected function populateConfig(ArrayObject $config): void
     {
+        $notifyAction = new NotifyAction();
+
         $config->defaults([
             'payum.factory_name' => 'qpay',
             'payum.factory_title' => 'QPay',
             'payum.action.capture' => new CaptureAction(),
-            'payum.action.notify' => new NotifyAction(),
+            'payum.action.notify' => $notifyAction,
             'payum.action.status' => new StatusAction(),
             'payum.action.sync' => new SyncAction(),
             'payum.action.convert_payment' => new ConvertPaymentAction(),
@@ -31,6 +34,10 @@ class PayumQPayGatewayFactory extends GatewayFactory
             'payum.action.check_payment' => new CheckPaymentAction(),
             'payum.action.create_invoice' => new CreateInvoiceAction(),
         ]);
+
+        if ($config['storage'] instanceof StorageInterface) {
+            $notifyAction->setStorage($config['storage']);
+        }
 
         if (false == $config['payum.api']) {
             $config['payum.default_options'] = [

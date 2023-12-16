@@ -21,8 +21,10 @@ class StatusAction implements ActionInterface
 
         switch ($model['status']) {
             case PaymentStatus::STATE_NEW->value:
-            case PaymentStatus::STATE_PROCESSING->value:
                 $request->markNew();
+                break;
+            case PaymentStatus::STATE_PROCESSING->value:
+                $request->markPending();
                 break;
             case PaymentStatus::STATE_PAID->value:
                 $request->markCaptured();

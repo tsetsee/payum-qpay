@@ -5,13 +5,10 @@ namespace Tsetsee\PayumQPay\Action;
 use Payum\Core\Action\ActionInterface;
 use Payum\Core\Bridge\Spl\ArrayObject;
 use Payum\Core\Exception\RequestNotSupportedException;
-use Payum\Core\GatewayAwareTrait;
 use Payum\Core\Request\Convert;
 
 class ConvertQPayAction implements ActionInterface
 {
-    use GatewayAwareTrait;
-
     /**
      * @param Convert $request
      */
@@ -41,7 +38,7 @@ class ConvertQPayAction implements ActionInterface
         $request->setResult((array) $model);
     }
 
-    public function supports($request)
+    public function supports($request): bool
     {
         return
             $request instanceof Convert

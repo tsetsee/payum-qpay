@@ -5,15 +5,12 @@ namespace Tsetsee\PayumQPay\Action;
 use Payum\Core\Action\ActionInterface;
 use Payum\Core\Bridge\Spl\ArrayObject;
 use Payum\Core\Exception\RequestNotSupportedException;
-use Payum\Core\GatewayAwareTrait;
 use Payum\Core\Model\PaymentInterface;
 use Payum\Core\Request\Convert;
 use Tsetsee\PayumQPay\Enum\PaymentStatus;
 
 class ConvertPaymentAction implements ActionInterface
 {
-    use GatewayAwareTrait;
-
     /**
      * @param Convert $request
      */
