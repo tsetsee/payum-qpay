@@ -16,26 +16,21 @@ class Api
 {
     private QPayApi $client;
 
+    /**
+     * @param array<string, mixed> $defaultOptions
+     */
     public function __construct(
         private string $username,
         private string $password,
-        private Env $env,
+        private Env|string $env,
         private string $invoiceCode,
+        array $defaultOptions = [],
     ) {
-    }
-
-    /**
-     * @param array<string, mixed> $options - [
-     *                                      ?Psr\Log\LoggerInterface $logger
-     *                                      ]
-     */
-    public function setup(array $options): void
-    {
         $this->client = new QPayApi(
             username: $this->username,
             password: $this->password,
-            env: $this->env,
-            options: $options,
+            env: is_string($this->env) ? Env::from($this->env) : $this->env,
+            options: $defaultOptions,
         );
     }
 
